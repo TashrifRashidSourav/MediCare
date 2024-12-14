@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css_Code/style.css">
+    <title>Login</title>
+</head>
+<body>
+    <div class="container">
+        <form action="../Php_Code/login.php" method="POST" class="form">
+            <h2>Login</h2>
+            <label for="login_input">Phone Number:</label>
+            <input type="text" id="login_input" name="login_input" placeholder="Enter phone number" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+            <label for="user_type">I am a:</label>
+            <select id="user_type" name="user_type" required>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+                <option value="manager">Manager</option>
+            </select>
+
+            <button type="submit" name="login">Login</button>
+            <p>Don't have an account? <a href="register.html">Register here</a>.</p>
+        </form>
+    </div>
+</body>
+</html>
