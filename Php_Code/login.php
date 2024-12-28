@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start the session
 include 'db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
@@ -27,14 +28,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 
     // Check if login credentials are correct
     if ($result->num_rows > 0) {
-        // Redirect based on user type
+        $user = $result->fetch_assoc();
+
+        // Store user details in session
+        $_SESSION['user_type'] = $user_type;
+
         if ($user_type === 'doctor') {
+            $_SESSION['doctor_license'] = $user['License_No'];
+            $_SESSION['doctor_name'] = $user['Name'];
             header("Location: ../html_Code/Doctor/doctorDashboard.html");
             exit;
         } elseif ($user_type === 'patient') {
+            $_SESSION['patient_mobile_no'] = $user['Mobile_No'];
+            $_SESSION['patient_name'] = $user['Name'];
             header("Location: ../html_Code/Patient/patientDashboard.html");
             exit;
         } elseif ($user_type === 'manager') {
+            $_SESSION['manager_mobile_no'] = $user['Mobile_No'];
+            $_SESSION['manager_name'] = $user['Name'];
             header("Location: ../html_Code/Manager/managerDashboard.html");
             exit;
         }
