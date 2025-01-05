@@ -57,7 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search_doctors'])) {
     }
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param($types, ...$params);
+    if ($types) {
+        $stmt->bind_param($types, ...$params);
+    }
     $stmt->execute();
     $result = $stmt->get_result();
     $search_results = $result->fetch_all(MYSQLI_ASSOC);
@@ -71,9 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_appointment_subm
     $doctor_id = intval($_POST['doctor_id']);
 
     // Fetch doctor and hospital details
-    $sql_fetch = "SELECT h.Doctor_Name, h.Doctor_License_Number, h.Hospital_Name, h.Hospital_License, h.Manager_Name, h.Manager_Mobile_Number
-                  FROM hospitals h
-                  WHERE h.id = ?";
+    $sql_fetch = "SELECT Doctor_Name, Doctor_License_Number, Hospital_Name, Hospital_License, Manager_Name, Manager_Mobile_Number
+                  FROM hospitals
+                  WHERE id = ?";
     $stmt_fetch = $conn->prepare($sql_fetch);
     $stmt_fetch->bind_param("i", $doctor_id);
     $stmt_fetch->execute();
@@ -84,22 +86,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_appointment_subm
     if ($doctor_info) {
         // Insert appointment into `appointments` table
         $sql_insert = "INSERT INTO appointments 
-                       (Patient_Id, Patient_Name, Patient_Mobile_No, Doctor_Name, Doctor_License_Number, Hospital_Name, Hospital_License, Appointment_Date, Appointment_Time, Serial_Number, Is_Accepted, Calling_Time, Created_At, Manager_Name, Manager_Mobile_No) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, 'pending', NULL, CURRENT_TIMESTAMP, ?, ?)";
+                       (Patient_Id, Patient_Name, Patient_Mobile_No, Doctor_Name, Doctor_License_Number, Hospital_Name, Hospital_License, Appointment_Date, Appointment_Time, Manager_Name, Manager_Mobile_No) 
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
         $stmt_insert = $conn->prepare($sql_insert);
         $stmt_insert->bind_param(
-            "isssssssss",
-            $patient_id,                      // Patient_Id
-            $patient_name,                    // Patient_Name
-            $patient_mobile_no,               // Patient_Mobile_No
-            $doctor_info['Doctor_Name'],      // Doctor_Name
-            $doctor_info['Doctor_License_Number'], // Doctor_License_Number
-            $doctor_info['Hospital_Name'],    // Hospital_Name
-            $doctor_info['Hospital_License'], // Hospital_License
-            $appointment_date,                // Appointment_Date
-            $appointment_time,                // Appointment_Time
-            $doctor_info['Manager_Name'],     // Manager_Name
-            $doctor_info['Manager_Mobile_Number'] // Manager_Mobile_No
+            "issssssssss",
+            $patient_id,
+            $patient_name,
+            $patient_mobile_no,
+            $doctor_info['Doctor_Name'],
+            $doctor_info['Doctor_License_Number'],
+            $doctor_info['Hospital_Name'],
+            $doctor_info['Hospital_License'],
+            $appointment_date,
+            $appointment_time,
+            $doctor_info['Manager_Name'],
+            $doctor_info['Manager_Mobile_Number']
         );
 
         if ($stmt_insert->execute()) {

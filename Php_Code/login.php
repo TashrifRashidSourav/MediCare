@@ -14,8 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     if ($user_type === 'doctor') {
         // Doctors login using License_No
         $sql = "SELECT * FROM $table WHERE License_No = ?";
+    } elseif ($user_type === 'patient') {
+        // Patients login using Mobile_No
+        $sql = "SELECT * FROM $table WHERE Mobile_No = ?";
     } else {
-        // Patients, Managers, and Admins login using Mobile_No
+        // Managers and Admins login using Mobile_No
         $sql = "SELECT * FROM $table WHERE Mobile_No = ?";
     }
 
@@ -39,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
                 header("Location: ../html_Code/Doctor/doctorDashboard.html");
                 exit;
             } elseif ($user_type === 'patient') {
+                // Updated: Set patient_id in session
+                $_SESSION['patient_id'] = $user['p_id'];
                 $_SESSION['patient_mobile_no'] = $user['Mobile_No'];
                 $_SESSION['patient_name'] = $user['Name'];
                 header("Location: ../html_Code/Patient/patientDashboard.php");
