@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Hospital</title>
+    <link rel="stylesheet" href="../../css_Code/add_hospitals.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Add Hospital</h1>
+        <form action="../../Php_Code/add_hospitals.php" method="POST">
+            <!-- Hospital Name -->
+            <label for="hospital_name">Hospital Name:</label>
+            <input type="text" id="hospital_name" name="hospital_name" required>
+
+            <!-- Hospital License -->
+            <label for="hospital_license">Hospital License:</label>
+            <input type="text" id="hospital_license" name="hospital_license" required>
+
+            <!-- Hospital Mobile Number -->
+            <label for="hospital_mobile_no">Hospital Mobile Number:</label>
+            <input type="text" id="hospital_mobile_no" name="hospital_mobile_no" required>
+
+            <!-- Location -->
+            <label for="location">Location:</label>
+            <select id="location" name="location" required>
+                <option value="Dhaka">Dhaka</option>
+                <option value="Rajshahi">Rajshahi</option>
+                <option value="Chittagong">Chittagong</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <!-- Visit Days -->
+            <label>Visit Days:</label>
+            <input type="checkbox" name="visit_days[]" value="Sunday"> Sunday
+            <input type="checkbox" name="visit_days[]" value="Monday"> Monday
+            <input type="checkbox" name="visit_days[]" value="Tuesday"> Tuesday
+            <input type="checkbox" name="visit_days[]" value="Wednesday"> Wednesday
+            <input type="checkbox" name="visit_days[]" value="Thursday"> Thursday
+            <input type="checkbox" name="visit_days[]" value="Friday"> Friday
+            <input type="checkbox" name="visit_days[]" value="Saturday"> Saturday
+
+            <!-- Visit Time Start -->
+            <label for="visit_time_start">Visit Time Start:</label>
+            <input type="time" id="visit_time_start" name="visit_time_start" required>
+
+            <!-- Visit Time End -->
+            <label for="visit_time_end">Visit Time End:</label>
+            <input type="time" id="visit_time_end" name="visit_time_end" required>
+
+            <!-- Visit Money -->
+            <label for="visit_money">Visit Money:</label>
+            <input type="number" id="visit_money" name="visit_money" required>
+
+            <!-- Submit Button -->
+            <button type="submit" name="submit">Add Hospital</button>
+        </form>
+    </div>
+</body>
+</html>
