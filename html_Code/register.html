@@ -6,15 +6,13 @@
     <link rel="stylesheet" href="../css_Code/style.css">
     <title>Registration</title>
     <script>
-        function toggleDoctorFields() {
+        function toggleFields() {
             const userType = document.getElementById("user_type").value;
             const doctorFields = document.getElementById("doctor_fields");
+            const managerFields = document.getElementById("manager_fields");
 
-            if (userType === "doctor") {
-                doctorFields.style.display = "block";
-            } else {
-                doctorFields.style.display = "none";
-            }
+            doctorFields.style.display = userType === "doctor" ? "block" : "none";
+            managerFields.style.display = userType === "manager" ? "block" : "none";
         }
     </script>
 </head>
@@ -28,16 +26,17 @@
             <input type="text" id="name" name="name" placeholder="Enter your name" required>
 
             <label for="phone_number">Phone Number:</label>
-            <input type="text" id="phone_number" name="phone_number" placeholder="Enter your phone number">
+            <input type="text" id="phone_number" name="phone_number" placeholder="Enter your phone number" required>
 
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
             <label for="user_type">I am a:</label>
-            <select id="user_type" name="user_type" onchange="toggleDoctorFields()" required>
+            <select id="user_type" name="user_type" onchange="toggleFields()" required>
                 <option value="patient">Patient</option>
                 <option value="doctor">Doctor</option>
                 <option value="manager">Manager</option>
+                <option value="admin">Admin</option>
             </select>
 
             <!-- Doctor-Specific Fields -->
@@ -53,6 +52,15 @@
 
                 <label for="details">Details:</label>
                 <textarea id="details" name="details" placeholder="Provide additional details"></textarea>
+            </div>
+
+            <!-- Manager-Specific Fields -->
+            <div id="manager_fields" style="display: none;">
+                <label for="hospital_name">Hospital Name:</label>
+                <input type="text" id="hospital_name" name="hospital_name" placeholder="Enter hospital name">
+
+                <label for="hospital_license_number">Hospital License Number:</label>
+                <input type="text" id="hospital_license_number" name="hospital_license_number" placeholder="Enter hospital license number">
             </div>
 
             <button type="submit" name="register">Register</button>
