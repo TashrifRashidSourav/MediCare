@@ -1,3 +1,7 @@
+
+<?php include 'navbar.php'; ?>
+<link rel="stylesheet" href="navbar.css">
+
 <?php
 // Database connection
 include '../../Php_Code/db_connection.php';

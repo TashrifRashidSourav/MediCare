@@ -1,3 +1,8 @@
+
+
+<?php include 'navbar.php'; ?>
+<link rel="stylesheet" href="navbar.css">
+
 <?php include 'appointment.php'; ?>
 <!DOCTYPE html>
 <html lang="en">

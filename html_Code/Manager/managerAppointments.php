@@ -1,3 +1,7 @@
+
+<?php include 'navbar.php'; ?>
+<link rel="stylesheet" href="navbar.css">
+
 <?php
 // Start session and include database connection
 session_start();
