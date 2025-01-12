@@ -33,10 +33,9 @@
 
             <label for="user_type">I am a:</label>
             <select id="user_type" name="user_type" onchange="toggleFields()" required>
-                <option value="patient">Patient</option>
                 <option value="doctor">Doctor</option>
                 <option value="manager">Manager</option>
-                <option value="admin">Admin</option>
+                <option value="patient">Patient</option>
             </select>
 
             <!-- Doctor-Specific Fields -->
@@ -44,14 +43,19 @@
                 <label for="license_no">License No:</label>
                 <input type="text" id="license_no" name="license_no" placeholder="Enter your license number">
 
-                <label for="expertise">Expertise:</label>
-                <input type="text" id="expertise" name="expertise" placeholder="Enter your expertise">
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email">
-
-                <label for="details">Details:</label>
-                <textarea id="details" name="details" placeholder="Provide additional details"></textarea>
+                <label for="dr_categories">Category:</label>
+                <select id="dr_categories" name="dr_categories" required>
+                    <option value="Gynecologist">Gynecologist</option>
+                    <option value="Cardiologist">Cardiologist</option>
+                    <option value="Nephrologist">Nephrologist</option>
+                    <option value="Dermatologist">Dermatologist</option>
+                    <option value="Neurologist">Neurologist</option>
+                    <option value="Pediatrician">Pediatrician</option>
+                    <option value="Orthopedic Surgeon">Orthopedic Surgeon</option>
+                    <option value="Gastroenterologist">Gastroenterologist</option>
+                    <option value="Endocrinologist">Endocrinologist</option>
+                    <option value="Oncologist">Oncologist</option>
+                </select>
             </div>
 
             <!-- Manager-Specific Fields -->
@@ -62,6 +66,9 @@
                 <label for="hospital_license_number">Hospital License Number:</label>
                 <input type="text" id="hospital_license_number" name="hospital_license_number" placeholder="Enter hospital license number">
             </div>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
 
             <button type="submit" name="register">Register</button>
             <p>Already have an account? <a href="login.html">Login here</a>.</p>

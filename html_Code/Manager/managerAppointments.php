@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_appointment_subm
 $conn->close();
 ?>
 
-<!DOCTYPE html>
+<!DOCTYPE html>x
 <html lang="en">
 <head>
     <meta charset="UTF-8">

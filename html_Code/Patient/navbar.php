@@ -5,7 +5,8 @@
         <ul class="nav-links">
             <li><a href="patientDashboard.php">Appointments</a></li>
             <li><a href="myappoinment.php">My Appointments</a></li>
-            <li><a href="../../html_Code/login.php?logout=true">Logout</a></li>
+            <li><a href="review.php">Hospital Reviews</a></li>
+            <li><a href="login.html">Logout</a></li>
         </ul>
     </div>
 </nav>
