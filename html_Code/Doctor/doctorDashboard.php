@@ -1,10 +1,15 @@
+
+<?php include 'navbar.php'; ?>
+<link rel="stylesheet" href="navbar.css">
+
+
 <?php
 session_start();
 include '../../Php_Code/db_connection.php';
 
 // Ensure the user is logged in and has a valid doctor ID
 if (!isset($_SESSION['doctor_id'])) {
-    die("Access denied. Please log in as a doctor."); // Replace this with a redirect to the login page
+    die("Access denied. Please log in as a doctor."); // Redirect to login page if not logged in
 }
 
 // Fetch logged-in doctor's information
@@ -46,18 +51,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $symptoms = $_POST['symptoms'];
         $diagnosis = $_POST['diagnosis'];
         $medical_test = $_POST['medical_test'];
-        $medicine = $_POST['medicine'];
 
-        $insert_query = "INSERT INTO patients_history (Patient_Mobile_No, Weight, Age, Blood_Group, Symptoms, Diagnosis, Medical_Test, Medicine, Doctor_Name, Doctor_Category)
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($insert_query);
-        $stmt->bind_param("sdisssssss", $mobile_no, $weight, $age, $blood_group, $symptoms, $diagnosis, $medical_test, $medicine, $doctor['Name'], $doctor['Dr_Categories']);
+        // Loop through medicines
+        $medicines = $_POST['medicine'];
+        $times = $_POST['times'];
+        $dosages = $_POST['dosage'];
+        $durations = $_POST['duration'];
+        $next_visits = $_POST['next_visit'];
 
-        if ($stmt->execute()) {
-            echo "<div class='success-message'>History added successfully!</div>";
-        } else {
-            echo "<div class='error-message'>Error: " . $stmt->error . "</div>";
+        foreach ($medicines as $index => $medicine) {
+            $insert_query = "INSERT INTO patients_history (Patient_Mobile_No, Weight, Age, Blood_Group, Symptoms, Diagnosis, Medical_Test, Medicine, Times, Dosage, Duration, Next_Visit, Doctor_Name, Doctor_Category)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($insert_query);
+            $stmt->bind_param(
+                "sdisssssssssss",
+                $mobile_no,
+                $weight,
+                $age,
+                $blood_group,
+                $symptoms,
+                $diagnosis,
+                $medical_test,
+                $medicine,
+                $times[$index],
+                $dosages[$index],
+                $durations[$index],
+                $next_visits[$index],
+                $doctor['Name'],
+                $doctor['Dr_Categories']
+            );
+
+            if (!$stmt->execute()) {
+                echo "<div class='error-message'>Error: " . $stmt->error . "</div>";
+            }
         }
+        echo "<div class='success-message'>History added successfully!</div>";
     }
 }
 ?>
@@ -93,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         form {
             margin-bottom: 20px;
-            padding: 10px;
         }
 
         form input, form select, form textarea, form button {
@@ -103,6 +130,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
+        }
+
+        .medicine-group {
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+
+        .medicine-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            background: #f4f4f4;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            margin-right: 5px;
+        }
+
+        .add-more {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .add-more:hover {
+            background-color: #0056b3;
         }
 
         form button {
@@ -150,6 +226,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 4px;
         }
     </style>
+    <script>
+        function addMedicineField() {
+            const container = document.getElementById('medicine-container');
+            const medicineGroup = document.createElement('div');
+            medicineGroup.className = 'medicine-group';
+
+            medicineGroup.innerHTML = `
+                <label class="medicine-label">Medicine Details:</label>
+                <input type="text" name="medicine[]" placeholder="Medicine name" required>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="times[]" value="Morning"> Morning</label>
+                    <label><input type="checkbox" name="times[]" value="Noon"> Noon</label>
+                    <label><input type="checkbox" name="times[]" value="Night"> Night</label>
+                    <label><input type="checkbox" name="times[]" value="After Meal"> After Meal</label>
+                    <label><input type="checkbox" name="times[]" value="Before Meal"> Before Meal</label>
+                </div>
+                <input type="text" name="dosage[]" placeholder="Dosage (e.g., 2 tablets)" required>
+                <input type="text" name="duration[]" placeholder="Duration (e.g., 5 days)" required>
+             
+            `;
+
+            container.appendChild(medicineGroup);
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -181,6 +281,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <th>Diagnosis</th>
                         <th>Medical Test</th>
                         <th>Medicine</th>
+                        <th>Times</th>
+                        <th>Dosage</th>
+                        <th>Duration</th>
+                        <th>Next Visit</th>
                         <th>Doctor</th>
                         <th>Category</th>
                     </tr>
@@ -196,6 +300,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <td><?= htmlspecialchars($row['Diagnosis']) ?></td>
                             <td><?= htmlspecialchars($row['Medical_Test']) ?></td>
                             <td><?= htmlspecialchars($row['Medicine']) ?></td>
+                            <td><?= htmlspecialchars($row['Times']) ?></td>
+                            <td><?= htmlspecialchars($row['Dosage']) ?></td>
+                            <td><?= htmlspecialchars($row['Duration']) ?></td>
+                            <td><?= htmlspecialchars($row['Next_Visit']) ?></td>
                             <td><?= htmlspecialchars($row['Doctor_Name']) ?></td>
                             <td><?= htmlspecialchars($row['Doctor_Category']) ?></td>
                         </tr>
@@ -234,10 +342,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="medical_test">Medical Test:</label>
                 <textarea name="medical_test" id="medical_test" placeholder="Enter medical tests"></textarea>
 
-                <label for="medicine">Medicine:</label>
-                <textarea name="medicine" id="medicine" placeholder="Enter prescribed medicine"></textarea>
+                <div id="medicine-container">
+                    <div class="medicine-group">
+                        <label class="medicine-label">Medicine Details:</label>
+                        <input type="text" name="medicine[]" placeholder="Medicine name" required>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="times[]" value="Morning"> Morning</label>
+                            <label><input type="checkbox" name="times[]" value="Noon"> Noon</label>
+                            <label><input type="checkbox" name="times[]" value="Night"> Night</label>
+                            <label><input type="checkbox" name="times[]" value="After Meal"> After Meal</label>
+                            <label><input type="checkbox" name="times[]" value="Before Meal"> Before Meal</label>
+                        </div>
+                        <input type="text" name="dosage[]" placeholder="Dosage (e.g., 2 tablets)" required>
+                        <input type="text" name="duration[]" placeholder="Duration (e.g., 5 days)" required>
+                        <input type="text" name="next_visit[]" placeholder="Next Visit (e.g., 7 days)" required>
+                    </div>
+                </div>
 
-                <button type="submit" name="add_history">Add History</button>
+                <button type="button" class="add-more" onclick="addMedicineField()">+ Add Medicine</button>
+                <button type="submit" name="add_history">Submit</button>
             </form>
         <?php elseif (isset($patient_result)): ?>
             <p>No patient found with this mobile number.</p>
@@ -245,4 +368,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </body>
 </html>
-

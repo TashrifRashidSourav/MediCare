@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
         // Patients login using Mobile_No
         $sql = "SELECT * FROM $table WHERE Mobile_No = ?";
     } else {
-        // Managers and Admins login using Mobile_No
+        // Managers login using Mobile_No
         $sql = "SELECT * FROM $table WHERE Mobile_No = ?";
     }
 
@@ -30,6 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
 
         // Verify the password using password_verify
         if (password_verify($password, $user['Password'])) {
+            // Check approval status for doctor and manager
+            if (($user_type === 'doctor' || $user_type === 'manager') && $user['Is_Accepted'] !== 'accepted') {
+                if ($user['Is_Accepted'] === 'pending') {
+                    echo "<script>
+                        alert('Your account is pending verification. Please wait for approval.');
+                        window.location.href = 'http://localhost/medicare/html_Code/login.html';
+                    </script>";
+                } else {
+                    echo "<script>
+                        alert('Your account has been rejected. Please contact support.');
+                        window.location.href = 'http://localhost/medicare/html_Code/login.html';
+                    </script>";
+                }
+                exit;
+            }
+
             // Store user details in session
             $_SESSION['user_type'] = $user_type;
 
@@ -59,11 +75,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             }
         } else {
             // Incorrect password
-            echo "Invalid password. Please try again.";
+            echo "<script>
+                alert('Invalid password. Please try again.');
+                window.location.href = 'http://localhost/medicare/html_Code/login.html';
+            </script>";
         }
     } else {
         // User not found
-        echo "Invalid login credentials. Please try again.";
+        echo "<script>
+            alert('Invalid login credentials. Please try again.');
+            window.location.href = 'http://localhost/medicare/html_Code/login.html';
+        </script>";
     }
 
     $stmt->close();

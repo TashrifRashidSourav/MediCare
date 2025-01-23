@@ -3,30 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css_Code/style.css">
-    <title>Login</title>
+    <title>Dynamic Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f8f8;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .container .left {
+            flex: 1;
+            position: relative;
+            background: #9a57aa; /* Base greenish background */
+            z-index: 0; /* Base layer */
+        }
+
+        .container .left::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('../image/patient-removebg-preview.png') no-repeat center center / cover; /* Default image */
+            z-index: 1; /* Above the greenish layer */
+            pointer-events: none; /* Prevent interaction */
+        }
+
+        .container .right {
+            flex: 1;
+            padding: 3rem;
+            background-color: #9a57aa;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container .right h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .container .right label {
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .container .right input,
+        .container .right select,
+        .container .right button {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .container .right input,
+        .container .right select {
+            background-color: #f5eaf4;
+            color: #333;
+        }
+
+        .container .right input:focus,
+        .container .right select:focus {
+            outline: 2px solid #6c3e76;
+        }
+
+        .container .right button {
+            background-color: #6c3e76;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .container .right button:hover {
+            background-color: #5b2f64;
+        }
+
+        .container .right p {
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        .container .right p a {
+            color: #e1bee7;
+            text-decoration: none;
+        }
+
+        .container .right p a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <form action="../Php_Code/login.php" method="POST" class="form">
-            <h2>Login</h2>
+        <div class="left" id="background"></div>
+        <div class="right">
+            <form action="../Php_Code/login.php" method="POST" class="form">
+                <h2>Welcome Back!</h2>
+                <label for="login_input">Phone Number (or License No for Doctors):</label>
+                <input type="text" id="login_input" name="login_input" placeholder="Enter your phone number or license number" required>
 
-            <label for="login_input">Phone Number (or License No for Doctors):</label>
-            <input type="text" id="login_input" name="login_input" placeholder="Enter your phone number or license number" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            <label for="user_type">I am a:</label>
-            <select id="user_type" name="user_type" required>
-                <option value="patient">Patient</option>
-                <option value="doctor">Doctor</option>
-                <option value="manager">Manager</option>
-                <option value="admin">Admin</option>
-            </select>
+                <label for="user_type">I am a:</label>
+                <select id="user_type" name="user_type" onchange="updateBackground()" required>
+                    <option value="patient">Patient</option> <!-- Default -->
+                    <option value="doctor">Doctor</option>
+                    <option value="manager">Manager</option>
+                </select>
 
-            <button type="submit" name="login">Login</button>
-            <p>Don't have an account? <a href="register.html">Register here</a>.</p>
-        </form>
+                <button type="submit" name="login">Login</button>
+                <p>Don't have an account? <a href="register.html">Register here</a>.</p>
+            </form>
+        </div>
     </div>
+
+    <script>
+        function updateBackground() {
+            const userType = document.getElementById('user_type').value;
+            const background = document.querySelector('.left');
+
+            let backgroundImage = '';
+
+            if (userType === 'doctor') {
+                backgroundImage = "url('../image/doctor-removebg-preview.png')"; // Doctor image
+            } else if (userType === 'patient') {
+                backgroundImage = "url('../image/patient-removebg-preview.png')"; // Patient image
+            } else if (userType === 'manager') {
+                backgroundImage = "url('../image/hospital-removebg-preview.png')"; // Manager image
+            }
+
+            // Update the ::after pseudo-element dynamically
+            background.style.setProperty('--background-image', backgroundImage);
+            document.styleSheets[0].addRule(
+                `.container .left::after`,
+                `background: ${backgroundImage} no-repeat center center / cover`
+            );
+        }
+    </script>
 </body>
 </html>

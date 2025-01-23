@@ -2,28 +2,35 @@
 session_start();
 include '../../Php_Code/db_connection.php';
 
+$message = "";
+
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $patientId = $_SESSION['patient_id']; // Assume patient_id is stored in session
-    $hospitalId = $_POST['hospital_id'];
+    $hospitalId = isset($_POST['hospital_id']) ? intval($_POST['hospital_id']) : null;
     $reviewText = $_POST['review_text'];
     $image = null;
 
-    // Handle image upload
-    if (isset($_FILES['review_image']) && $_FILES['review_image']['error'] == 0) {
-        $image = file_get_contents($_FILES['review_image']['tmp_name']);
-    }
-
-    // Insert the review into the database
-    $sql = "INSERT INTO hospital_reviews (Patient_Id, Hospital_Id, Review_Text, Image, Is_Accepted)
-            VALUES (?, ?, ?, ?, 'pending')";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iiss", $patientId, $hospitalId, $reviewText, $image);
-
-    if ($stmt->execute()) {
-        $message = "Review submitted successfully! Pending admin approval.";
+    // Validate inputs
+    if (is_null($hospitalId)) {
+        $message = "Error: Please select a valid hospital.";
     } else {
-        $message = "Error submitting review: " . $conn->error;
+        // Handle image upload
+        if (isset($_FILES['review_image']) && $_FILES['review_image']['error'] == 0) {
+            $image = file_get_contents($_FILES['review_image']['tmp_name']);
+        }
+
+        // Insert the review into the database
+        $sql = "INSERT INTO hospital_reviews (Patient_Id, Hospital_Id, Review_Text, Image, Is_Accepted)
+                VALUES (?, ?, ?, ?, 'pending')";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iiss", $patientId, $hospitalId, $reviewText, $image);
+
+        if ($stmt->execute()) {
+            $message = "Review submitted successfully! Pending admin approval.";
+        } else {
+            $message = "Error submitting review: " . $stmt->error;
+        }
     }
 }
 ?>
@@ -87,22 +94,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: green;
             margin-bottom: 15px;
         }
+
+        .error {
+            text-align: center;
+            color: red;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Write a Review for a Hospital</h2>
         <?php if (!empty($message)): ?>
-            <p class="message"><?= htmlspecialchars($message) ?></p>
+            <p class="<?= strpos($message, 'Error') !== false ? 'error' : 'message' ?>">
+                <?= htmlspecialchars($message) ?>
+            </p>
         <?php endif; ?>
         <form action="review.php" method="post" enctype="multipart/form-data">
             <label for="hospital_id">Select Hospital:</label>
             <select name="hospital_id" id="hospital_id" required>
+                <option value="">Select a hospital</option>
                 <?php
                 $query = "SELECT id, Hospital_Name FROM hospitals";
                 $result = $conn->query($query);
-                while ($row = $result->fetch_assoc()) {
-                    echo "<option value='" . $row['id'] . "'>" . $row['Hospital_Name'] . "</option>";
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<option value='" . $row['id'] . "'>" . htmlspecialchars($row['Hospital_Name']) . "</option>";
+                    }
+                } else {
+                    echo "<option value=''>No hospitals available</option>";
                 }
                 ?>
             </select>
