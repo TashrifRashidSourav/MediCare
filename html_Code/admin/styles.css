@@ -1,0 +1,84 @@
+/* General styling for the page */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #007BFF, #00C6FF);
+    color: #333;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container for the form */
+.container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Form heading */
+h2 {
+    color: #007BFF;
+    margin-bottom: 20px;
+    font-size: 1.8em;
+}
+
+/* Input fields styling */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Submit button styling */
+button {
+    background: #007BFF;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+    width: 100%;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Error and success messages */
+.error {
+    color: #ff3333;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+.success {
+    color: #28a745;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+/* Link styling */
+a {
+    color: #007BFF;
+    text-decoration: none;
+    font-size: 0.9em;
+    display: block;
+    margin-top: 10px;
+}
+
+a:hover {
+    text-decoration: underline;
+}

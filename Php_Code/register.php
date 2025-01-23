@@ -11,14 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
     if ($user_type === "doctor") {
         $license_no = $_POST['license_no'];
         $expertise = $_POST['expertise'];
+        $dr_categories = $_POST['dr_categories'];
         $email = $_POST['email'];
         $details = $_POST['details'];
 
         // Insert into Doctors table
-        $sql = "INSERT INTO Doctors (Name, License_No, Expertise, Password, Email, Details) 
-                VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO Doctors (Name, License_No, Dr_Categories, Expertise, Password, Email, Details, Mobile_No) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssss", $name, $license_no, $expertise, $hashed_password, $email, $details);
+        $stmt->bind_param("ssssssss", $name, $license_no, $dr_categories, $expertise, $hashed_password, $email, $details, $phone_number);
 
     } elseif ($user_type === "patient") {
         // Insert into Patients table

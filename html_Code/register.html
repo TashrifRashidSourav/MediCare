@@ -3,8 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css_Code/style.css">
     <title>Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+    font-family: 'Arial', sans-serif;
+    background-color: #9a57aa;
+    margin: 0; /* Remove default margin to avoid unwanted scrolling */
+    min-height: 100vh; /* Ensure the body covers at least the full viewport height */
+    display: flex;
+    flex-direction: column; /* Allows natural stacking of content */
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* Enables scrolling when content overflows */
+    padding: 1rem; /* Optional padding to avoid content touching edges */
+}
+
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .container .left {
+            flex: 1;
+            position: relative;
+            background: #9a57aa; 
+            z-index: 0; 
+        }
+
+        .container .left::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('../image/patient-removebg-preview.png') no-repeat center center / cover;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .container .right {
+    flex: 1;
+    padding: 3rem;
+    background-color: #9a57aa;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align content to the top */
+    align-items: flex-start;
+    min-height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    box-sizing: border-box; /* Include padding in size calculations */
+}
+
+
+        .container .right h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .container .right label {
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .container .right input,
+        .container .right select,
+        .container .right button,
+        .container .right textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .container .right input,
+        .container .right select,
+        .container .right textarea {
+            background-color: #f5eaf4;
+            color: #333;
+        }
+
+        .container .right input:focus,
+        .container .right select:focus,
+        .container .right textarea:focus {
+            outline: 2px solid #6c3e76;
+        }
+
+        .container .right button {
+            background-color: #6c3e76;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .container .right button:hover {
+            background-color: #5b2f64;
+        }
+
+        .container .right p {
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        .container .right p a {
+            color: #e1bee7;
+            text-decoration: none;
+        }
+
+        .container .right p a:hover {
+            text-decoration: underline;
+        }
+    </style>
     <script>
         function toggleFields() {
             const userType = document.getElementById("user_type").value;
@@ -18,54 +139,77 @@
 </head>
 <body>
     <div class="container">
-        <form action="../Php_Code/register.php" method="POST" class="form">
-            <h2>Register</h2>
+        <div class="left"></div>
+        <div class="right">
+            <form action="../Php_Code/register.php" method="POST" class="form">
+                <h2>Register</h2>
 
-            <!-- Common Fields -->
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
 
-            <label for="phone_number">Phone Number:</label>
-            <input type="text" id="phone_number" name="phone_number" placeholder="Enter your phone number" required>
+                <label for="phone_number">Phone Number:</label>
+                <input 
+                type="text" 
+                id="phone_number" 
+                name="phone_number" 
+                placeholder="Enter your phone number" 
+                pattern="\d{11}" 
+                maxlength="11" 
+                required 
+                title="Please enter an 11-digit phone number"
+            />
+            
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
 
-            <label for="user_type">I am a:</label>
-            <select id="user_type" name="user_type" onchange="toggleFields()" required>
-                <option value="patient">Patient</option>
-                <option value="doctor">Doctor</option>
-                <option value="manager">Manager</option>
-                <option value="admin">Admin</option>
-            </select>
+                <label for="user_type">I am a:</label>
+                <select id="user_type" name="user_type" onchange="toggleFields()" required>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="manager">Manager</option>
+                </select>
 
-            <!-- Doctor-Specific Fields -->
-            <div id="doctor_fields" style="display: none;">
-                <label for="license_no">License No:</label>
-                <input type="text" id="license_no" name="license_no" placeholder="Enter your license number">
+                <div id="doctor_fields" style="display: none;">
+                    <label for="license_no">License No:</label>
+                    <input type="text" id="license_no" name="license_no" placeholder="Enter your license number">
 
-                <label for="expertise">Expertise:</label>
-                <input type="text" id="expertise" name="expertise" placeholder="Enter your expertise">
+                    <label for="expertise">Expertise:</label>
+                    <input type="text" id="expertise" name="expertise" placeholder="Enter your expertise">
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email">
+                    <label for="dr_categories">Category:</label>
+                    <select id="dr_categories" name="dr_categories" required>
+                        <option value="Gynecologist">Gynecologist</option>
+                        <option value="Cardiologist">Cardiologist</option>
+                        <option value="Nephrologist">Nephrologist</option>
+                        <option value="Dermatologist">Dermatologist</option>
+                        <option value="Neurologist">Neurologist</option>
+                        <option value="Pediatrician">Pediatrician</option>
+                        <option value="Orthopedic Surgeon">Orthopedic Surgeon</option>
+                        <option value="Gastroenterologist">Gastroenterologist</option>
+                        <option value="Endocrinologist">Endocrinologist</option>
+                        <option value="Oncologist">Oncologist</option>
+                    </select>
 
-                <label for="details">Details:</label>
-                <textarea id="details" name="details" placeholder="Provide additional details"></textarea>
-            </div>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email">
 
-            <!-- Manager-Specific Fields -->
-            <div id="manager_fields" style="display: none;">
-                <label for="hospital_name">Hospital Name:</label>
-                <input type="text" id="hospital_name" name="hospital_name" placeholder="Enter hospital name">
+                    <label for="details">Details:</label>
+                    <textarea id="details" name="details" placeholder="Provide additional details"></textarea>
+                </div>
 
-                <label for="hospital_license_number">Hospital License Number:</label>
-                <input type="text" id="hospital_license_number" name="hospital_license_number" placeholder="Enter hospital license number">
-            </div>
+                <div id="manager_fields" style="display: none;">
+                    <label for="hospital_name">Hospital Name:</label>
+                    <input type="text" id="hospital_name" name="hospital_name" placeholder="Enter hospital name">
 
-            <button type="submit" name="register">Register</button>
-            <p>Already have an account? <a href="login.html">Login here</a>.</p>
-        </form>
+                    <label for="hospital_license_number">Hospital License Number:</label>
+                    <input type="text" id="hospital_license_number" name="hospital_license_number" placeholder="Enter hospital license number">
+                </div>
+
+                <button type="submit" name="register">Register</button>
+                <p>Already have an account? <a href="login.html">Login here</a>.</p>
+            </form>
+        </div>
     </div>
 </body>
 </html>
