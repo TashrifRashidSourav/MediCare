@@ -1,8 +1,8 @@
 
+
 <?php include 'navbar.php'; ?>
+
 <link rel="stylesheet" href="navbar.css">
-
-
 <?php
 session_start();
 include '../../Php_Code/db_connection.php';

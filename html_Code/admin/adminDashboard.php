@@ -1,3 +1,7 @@
+
+<?php include 'navbar.php'; ?>
+<link rel="stylesheet" href="navbar.css">
+
 <?php
 // Connect to the database
 $conn = mysqli_connect("localhost", "root", "", "medicare");

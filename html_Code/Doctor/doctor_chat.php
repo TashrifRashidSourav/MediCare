@@ -1,7 +1,3 @@
-
-<?php include 'navbar.php'; ?>
-<link rel="stylesheet" href="navbar.css">
-
 <?php
 session_start();
 $servername = "localhost";
@@ -41,7 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     } elseif (isset($_POST['getMessages'])) {
         $contact_id = $_POST['contact_id'];
-        $conversation_id = "doctor_{$doctor_id}_doctor_{$contact_id}";
 
         $sql = "SELECT doctor_chat.*, d1.Name AS sender_name 
                 FROM doctor_chat
